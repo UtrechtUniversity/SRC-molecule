@@ -90,6 +90,10 @@ Note that you can also define multiple platforms.
 
 The molecule tests can use either Docker or Podman (default). You can override the default driver in your scenario's `molecule.yml`. Or even easier: set an environment variable like `DRIVER=docker`.
 
+### Adding additional preparation tasks
+
+Sometimes it may be helpful to perform certain tasks before the `converge` step. The default `prepare.yml` playbook will check if the user has set the `extra_prepare_tasks` key in the scenario's `molecule.yml` `env` section. Set this key to a relative path to a playbook (relative to the location of the default molecule configuration), and the tasks in that playbook will be executed at the end of the `prepare` step.
+
 ### Adding additional assertions
 
 You can a `verify.yml` to your scenario to perform additional assertions. See the [Molecule docs](https://ansible.readthedocs.io/projects/molecule/configuration/#verifier).
