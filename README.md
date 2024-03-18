@@ -8,28 +8,47 @@ Follow the installation and setup instructions below, then run:
 
 `molecule -c molecule/ext/molecule-src/molecule.yml test -s <scenario-name>`
 
-...where <scenario-name> is the name of one of the subdirectories of the `molecule` directory, e.g. `playbook-security_updates`. 
+...where `<scenario-name>` is the name of one of the subdirectories of the `molecule` directory, e.g. `playbook-security_updates`. 
 
 ### Requirements
 
 1. Docker and/or Podman (to spin up test containers)
-1. Python and pip
+1. Python and pip   
 1. Ansible
+1. Molecule
 1. Access to the [test container images](https://github.com/UtrechtUniversity/SRC-test-workspace)
 
-The default `molecule.yml` is configured to use the images from [this package](https://github.com/UtrechtUniversity/SRC-test-workspace/i), but you can override this to use other images.
+Before you start, run `pip install -r molecule/ext/molecule-src/requirements.txt` to install Molecule itself and other python dependencies.
 
+The default `molecule.yml` is configured to use the images from [this package](https://github.com/UtrechtUniversity/SRC-test-workspace/), but you can override this to use other images.
+
+### Getting the container images
+
+The default `molecule.yml` is configured to use the images from [this package](https://github.com/UtrechtUniversity/SRC-test-workspace/), but you can also override this to use other images. There are two ways to provide Molecule with access to the right images:
+
+1. Manually pull the images from the container registry. If the images are already available locally, there is no need to authenticate with the container registry.
+   * `docker login ghcr.io` (or `podman login`)
+   * enter your github username and a valid token
+   * `docker pull <imgname>` (or `podman pull`)
+   * See [the package](https://github.com/UtrechtUniversity/SRC-test-workspace/) for the image names
+2. If you set the right variables when running `molecule`, it will pull the images automatically.
+   * `export DOCKER_REGISTRY=ghcr.io`
+   * `export DOCKER_USER=githubusername`
+   * `export DOCKER_PW=githubtoken`
+   
 ### Install SRC-specific configuration
+
+NB: this is not necessary for running tests on a repository already containing the configuration files from this repository, only to add tests to a repository that does not contain them yet.
 
 To add Molecule tests to your SRC component or catalog item repository, follow these steps:
 
-1. create a `molecule` directory in your repository's root: `mkdir molecule`
-1. include the contents of this repository as a subtree, under `molecule/ext/molecule-src`
+* create a `molecule` directory in your repository's root: `mkdir molecule`
+* include the contents of this repository as a subtree, under `molecule/ext/molecule-src`
   * `git remote add molecule-src https://github.com/UtrechtUniversity/SRC-molecule.git`
   * `git subtree add --prefix molecule/ext/molecule-src molecule-src main --squash`
-1. copy the default `.env.yml` file to your repository root: `cp molecule/ext/molecule-src/default.env.yml .env.yml`
+* copy the default `.env.yml` file to your repository root: `cp molecule/ext/molecule-src/default.env.yml .env.yml`
   * optionally edit the contents of `.env.yml`, if your playbooks are not in the default location (the repository root)
-1. run `pip install -r molecule/ext/molecule-src/requirements.txt`
+* run `pip install -r molecule/ext/molecule-src/requirements.txt`
 
 That's it for setup! You're now ready to start [adding your own scenarios](#adding-scenarios).
 
