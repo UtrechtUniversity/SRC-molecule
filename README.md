@@ -141,3 +141,38 @@ Both of these methods ensure that the container is not destroyed after molecule 
   * see that the container `workspace-src-ubuntu_focal` is still running
 2. `docker exec -it workspace-src-ubuntu_focal bash`
   * login to the container as root
+
+### The component cannot be found on the workspace
+
+Problem: the `converge` step fails with the following error message in Ansible's `stderr` result:
+
+```
+'ERROR! the playbook: /rsc/plugins/componentname/playbookname.yml could not be found'
+```
+
+This can occassionally occur when Molecule thinks it has already run the `prepare` step on your container, but actually hasn't. (This happens, for instance, when the `converge` step uses as an old container that is still running because you used `--destroy=never` in a previous run.)
+
+Try resetting your molecule cache:
+
+`molecule -c molecule/ext/molecule-src/molecule.yml reset -s playbook-aptly`
+
+This will stop the container and flush the cache. Sometimes manually removing the cache may also be useful during troubleshooting:
+
+`rm -rf ~/.cache/molecule`
+
+### Container unreachable error
+
+Molecule runs sometimes fail with an error message like the following:
+
+```
+task path: /home/user/researchcloud-items/molecule/ext/molecule-src/prepare.yml:2
+fatal: [workspace-src-ubuntu_jammy]: UNREACHABLE! => changed=false 
+  msg: 'Failed to create temporary directory. In some cases, you may have been able to authenticate and did not have permissions on the target directory. Consider changing the remote tmp path in ansible.cfg to a path rooted in "/tmp", for more error information use -vvv. Failed command was: ( umask 77 && mkdir -p "` echo ~/.ansible/tmp `"&& mkdir "` echo ~/.ansible/tmp/ansible-tmp-1710760454.6766412-70112-138145577949983 `" && echo ansible-tmp-1710760454.6766412-70112-138145577949983="` echo ~/.ansible/tmp/ansible-tmp-1710760454.6766412-70112-138145577949983 `" ), exited with result 1'
+  unreachable: true
+```
+
+This may occur when trying to initalize a container with the command parameter set to `/sbin/init`, i.e. when trying to run a container controlled by `systemd`. Some component tests may need this, because they are testing functionality of `systemd` services. However, in some circumstances, starting a container with `/sbin/init` fails:
+
+* Docker support for `systemd` is not excellent, try using Podman instead.
+* The error also occurs when using container emulation (e.g. using an `amd64` image on an `arm64` host). Get a native image instead.
+* Adding the `privileged: true` option to the platform usually takes care of the problem (even when using Docker!), but this is only recommended as a workaround [for security reasons](https://www.trendmicro.com/en_vn/research/19/l/why-running-a-privileged-container-in-docker-is-a-bad-idea.html).
