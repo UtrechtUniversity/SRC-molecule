@@ -83,10 +83,14 @@ provisioner:
   name: ansible
   env:
     components:
-      - name: 'my-component'
-        path: 'my-component.yaml'
+      - name: my-component
+        path: my-component.yaml
         parameters: # Define all parameters needed by the component here
           my_component_param1: 'Foo'
+      - name: my-git-component # You can also provide components that should be cloned onto the workspace using git
+        git: https://github.com/foo/bar.git
+        version: my_branch
+        path: playbook.ymk
 ```
 
 The above config file does not provide a `platforms` key, so tests for this scenario will use the default platforms (containers) specified in `molecule/ext/molecule-src/molecule.yml` (Ubuntu Focal and Ubuntu Jammy). You can override this by adding your own platform definition, e.g.:
