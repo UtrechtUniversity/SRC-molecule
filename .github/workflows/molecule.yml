@@ -42,4 +42,4 @@ jobs:
       - run: ansible-galaxy install -r requirements.yml
       - name: Molecule tests
         run: |
-          molecule -vv test
+          molecule -vv -c ${{ env.MOLECULE_CONFIG }} test
