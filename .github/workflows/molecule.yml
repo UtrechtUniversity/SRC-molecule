@@ -17,8 +17,9 @@ jobs:
       DOCKER_REGISTRY: ghcr.io
       ANSIBLE_FORCE_COLOR: '1'
       ANSIBLE_STDOUT_CALLBACK: yaml
-      MOLECULE_CONFIG: molecule.yml
+      MOLECULE_CONFIG: molecule/ext/molecule-src/molecule.yml
       REQUIREMENTS_FILE: requirements.txt
+      PLAYBOOK_DIR: ../../../ # relative to molecule/ext/molecule-src/molecule.yml
       CRUN_VER: 1.11.2
     steps:
       - name: Workaround crun issue on ubuntu # https://github.com/UtrechtUniversity/SRC-catalog-items/issues/3
@@ -38,8 +39,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - run: git clone https://github.com/UtrechtUniversity/SRC-molecule-test.git molecule
+      - run: mkdir molecule/ext && cd molecule/ext && ln -s ../../ molecule-src
       - run: pip install -r ${{ env.REQUIREMENTS_FILE }}
       - run: ansible-galaxy install -r requirements.yml
       - name: Molecule tests
         run: |
-          molecule -vv test
+          molecule -vv -c ${{ env.MOLECULE_CONFIG }} test
