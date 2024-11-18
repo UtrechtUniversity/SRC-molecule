@@ -1,22 +1,22 @@
 ---
 - name: Check for plugin requirements file
   stat:
-    path: /rsc/plugins/{{ remote_plugin.script_folder | basename }}/requirements.yml
+    path: /rsc/plugins/{{ remote_plugin.script_folder }}/requirements.yml
   register: register_requirements_1
 
 - name: Check for plugin requirements file 2
   stat:
-    path: /rsc/plugins/{{ remote_plugin.script_folder | basename }}/{{ remote_plugin.path | dirname }}/requirements.yml
+    path: /rsc/plugins/{{ remote_plugin.script_folder }}/{{ remote_plugin.path | dirname }}/requirements.yml
   register: register_requirements_2
 
 - name: Set path to file 1 if it exists
   set_fact:
-    requirements_path: /rsc/plugins/{{ remote_plugin.script_folder | basename }}/requirements.yml
+    requirements_path: register_requirements_1.stat.path
   when: register_requirements_1.stat.exists
 
 - name: Set path to file 2 if file 1 does not exist and file 2 exists
   set_fact:
-    requirements_path: /rsc/plugins/{{ remote_plugin.script_folder | basename }}/{{ remote_plugin.path | dirname }}/requirements.yml
+    requirements_path: register_requirements_2.stat.path
   when: not register_requirements_1.stat.exists and register_requirements_2.stat.exists
 
 - name: Install role dependencies for Ansible plugin

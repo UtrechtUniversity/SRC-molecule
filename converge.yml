@@ -15,6 +15,6 @@
           script_type: Ansible PlayBook
           arguments: -i 127.0.0.1, --skip-tags {{ ansible_skip_tags | join(',') }}
           parameters: "{{ item.parameters | default({}) | to_json }}"
-          script_folder: "{{ item.name }}/"
+          script_folder: "{{ item.name }}"
           path: "{{ item.path }}"
       with_items: "{{ lookup('env', 'components') }}"
