@@ -29,7 +29,7 @@
         chdir: /rsc/plugins/{{ remote_plugin.script_folder | basename }}
         executable: /bin/bash
       register: roles_install
-      changed_when: 'Nothing to do' not in roles_install.stdout
+      changed_when: "'Nothing to do' not in roles_install.stdout"
 
     - name: Install collection dependencies for Ansible plugin
       when: requirements_path is defined
@@ -39,7 +39,7 @@
         chdir: /rsc/plugins/{{ remote_plugin.script_folder | basename }}
         executable: /bin/bash
       register: collections_install
-      changed_when: 'Nothing to do' not in roles_install.stdout
+      changed_when: "'Nothing to do' not in roles_install.stdout"
 
 - name: Test the component by executing it using ansible on the workspace
   ansible.builtin.command: >
