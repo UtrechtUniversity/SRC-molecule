@@ -1,39 +1,45 @@
 ---
-- name: Check for plugin requirements file
-  stat:
-    path: /rsc/plugins/{{ remote_plugin.script_folder }}/requirements.yml
-  register: register_requirements_1
+- name: Install component Ansible Galaxy dependencies
+  block:
+    - name: Check for plugin requirements file
+      stat:
+        path: /rsc/plugins/{{ remote_plugin.script_folder }}/requirements.yml
+      register: register_requirements_1
 
-- name: Check for plugin requirements file 2
-  stat:
-    path: /rsc/plugins/{{ remote_plugin.script_folder }}/{{ remote_plugin.path | dirname }}/requirements.yml
-  register: register_requirements_2
+    - name: Check for plugin requirements file 2
+      stat:
+        path: /rsc/plugins/{{ remote_plugin.script_folder }}/{{ remote_plugin.path | dirname }}/requirements.yml
+      register: register_requirements_2
 
-- name: Set path to file 1 if it exists
-  set_fact:
-    requirements_path: "{{ register_requirements_1.stat.path }}"
-  when: register_requirements_1.stat.exists
+    - name: Set path to file 1 if it exists
+      set_fact:
+        requirements_path: "{{ register_requirements_1.stat.path }}"
+      when: register_requirements_1.stat.exists
 
-- name: Set path to file 2 if file 1 does not exist and file 2 exists
-  set_fact:
-    requirements_path: "{{ register_requirements_2.stat.path }}"
-  when: not register_requirements_1.stat.exists and register_requirements_2.stat.exists
+    - name: Set path to file 2 if file 1 does not exist and file 2 exists
+      set_fact:
+        requirements_path: "{{ register_requirements_2.stat.path }}"
+      when: not register_requirements_1.stat.exists and register_requirements_2.stat.exists
 
-- name: Install role dependencies for Ansible plugin
-  command: |
-    ansible-galaxy role install -r {{ requirements_path }} -p /rsc/plugins/{{ remote_plugin.script_folder | basename }}
-  args:
-    chdir: /rsc/plugins/{{ remote_plugin.script_folder | basename }}
-    executable: /bin/bash
-  when: requirements_path is defined
+    - name: Install role dependencies for Ansible plugin
+      when: requirements_path is defined
+      command: |
+        ansible-galaxy role install -r {{ requirements_path }} -p /rsc/plugins/{{ remote_plugin.script_folder | basename }}
+      args:
+        chdir: /rsc/plugins/{{ remote_plugin.script_folder | basename }}
+        executable: /bin/bash
+      register: roles_install
+      changed_when: 'Nothing to do' not in roles_install.stdout
 
-- name: Install collection dependencies for Ansible plugin
-  command: |
-    ansible-galaxy collection install -r {{ requirements_path }} -p /rsc/plugins/{{ remote_plugin.script_folder | basename }}/collections
-  args:
-    chdir: /rsc/plugins/{{ remote_plugin.script_folder | basename }}
-    executable: /bin/bash
-  when: requirements_path is defined
+    - name: Install collection dependencies for Ansible plugin
+      when: requirements_path is defined
+      command: |
+        ansible-galaxy collection install -r {{ requirements_path }} -p /rsc/plugins/{{ remote_plugin.script_folder | basename }}/collections
+      args:
+        chdir: /rsc/plugins/{{ remote_plugin.script_folder | basename }}
+        executable: /bin/bash
+      register: collections_install
+      changed_when: 'Nothing to do' not in roles_install.stdout
 
 - name: Test the component by executing it using ansible on the workspace
   ansible.builtin.command: >
