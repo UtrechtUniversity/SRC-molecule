@@ -43,6 +43,6 @@
     - name: Create ansible venv
       ansible.builtin.pip:
         executable: uv_pip # an alias for "uv pip" created by the SRC-External component, and which is present on the test image.
-        name: ansible=={{ remote_ansible_version | default('11.1.0') }}
+        name: ansible=={{ remote_ansible_version | default(lookup('env', 'REMOTE_ANSIBLE_VERSION')) | default('11.1.0', true) }}
       environment:
         VIRTUAL_ENV: /etc/src/venv/ansible_env
