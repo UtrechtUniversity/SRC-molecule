@@ -29,6 +29,8 @@
       args:
         chdir: /rsc/plugins/{{ remote_plugin.script_folder | basename }}
         executable: /bin/bash
+      environment:
+        PATH: "$PATH:/etc/src/venv/ansible_env"
 
     - name: Install collection dependencies for Ansible plugin
       when: requirements_path is defined
@@ -37,6 +39,8 @@
       args:
         chdir: /rsc/plugins/{{ remote_plugin.script_folder | basename }}
         executable: /bin/bash
+      environment:
+        PATH: "$PATH:/etc/src/venv/ansible_env"
 
 - name: Test the component by executing it using ansible on the workspace
   ansible.builtin.command: >
@@ -47,3 +51,5 @@
     ansible_on_workspace.stdout_lines is not defined or
     'changed=0' not in
     ansible_on_workspace.stdout_lines[ lookup('ansible.utils.index_of', ansible_on_workspace.stdout_lines, 'regex', '\s*PLAY RECAP\s*')+1 ]
+  environment:
+    PATH: "$PATH:/etc/src/venv/ansible_env"
