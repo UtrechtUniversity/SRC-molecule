@@ -2,7 +2,7 @@
 driver:
   name: ${DRIVER-podman}
   image_settings: &image_settings
-    rootless: ${CI-true}
+    rootless: ${DRIVER_ROOTFUL-true}
     pre_build_image: true
     registry:
       url: $DOCKER_REGISTRY
