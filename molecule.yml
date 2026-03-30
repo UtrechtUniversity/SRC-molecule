@@ -28,4 +28,4 @@ provisioner:
     ANSIBLE_VERBOSITY: ${ANSIBLE_VERBOSITY:-"2"}
     ANSIBLE_ROLES_PATH: ${ANSIBLE_ROLES_PATH:-'../../roles'}
     REQUIREMENTS_FILE: ${REQUIREMENTS_FILE:-"../../requirements.txt"}
-    REMOTE_ANSIBLE_VERSION: "" # empty for default
+    WORKSPACE_ANSIBLE_VENV: ${WORKSPACE_ANSIBLE_VENV-"/etc/src/venv/ansible_env"}
