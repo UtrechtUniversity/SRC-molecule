@@ -53,4 +53,3 @@
     ansible_on_workspace.stdout_lines[ lookup('ansible.utils.index_of', ansible_on_workspace.stdout_lines, 'regex', '\s*PLAY RECAP\s*')+1 ]
   environment:
     VIRTUAL_ENV: /etc/src/venv/ansible_env
-
