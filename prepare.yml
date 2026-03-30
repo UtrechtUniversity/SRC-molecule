@@ -39,3 +39,10 @@
     - name: Execute optional extra preparations
       ansible.builtin.include_tasks: "{{ extra_preparations }}"
       when: extra_preparations != ""
+
+    - name: Create ansible venv
+      ansible.builtin.pip:
+        executable: uv_pip # an alias for "uv pip" created by the SRC-External component, and which is present on the test image.
+        name: ansible=={{ remote_ansible_version | default('11.1.0') }}
+      environment:
+        VIRTUAL_ENV: /etc/src/venv/ansible_env
