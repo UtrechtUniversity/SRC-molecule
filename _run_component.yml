@@ -30,7 +30,7 @@
         chdir: /rsc/plugins/{{ remote_plugin.script_folder | basename }}
         executable: /bin/bash
       environment:
-        PATH: $PATH:{{ workspace_ansible_venv }}/bin
+        PATH: $PATH:{{ lookup('env', 'WORKSPACE_ANSIBLE_VENV') | default('/etc/src/venv/ansible_env', true) }}/bin
 
     - name: Install collection dependencies for Ansible plugin
       when: requirements_path is defined
@@ -40,7 +40,7 @@
         chdir: /rsc/plugins/{{ remote_plugin.script_folder | basename }}
         executable: /bin/bash
       environment:
-        PATH: $PATH:{{ workspace_ansible_venv }}/bin
+        PATH: $PATH:{{ lookup('env', 'WORKSPACE_ANSIBLE_VENV') | default('/etc/src/venv/ansible_env', true) }}/bin
 
 - name: Test the component by executing it using ansible on the workspace
   ansible.builtin.command: >
@@ -52,4 +52,4 @@
     'changed=0' not in
     ansible_on_workspace.stdout_lines[ lookup('ansible.utils.index_of', ansible_on_workspace.stdout_lines, 'regex', '\s*PLAY RECAP\s*')+1 ]
   environment:
-    PATH: $PATH:{{ workspace_ansible_venv }}/bin
+    PATH: $PATH:{{ lookup('env', 'WORKSPACE_ANSIBLE_VENV') | default('/etc/src/venv/ansible_env', true) }}/bin
