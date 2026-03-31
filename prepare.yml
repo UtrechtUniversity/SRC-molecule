@@ -32,7 +32,7 @@
         update_cache: true
       when: ansible_os_family == 'Debian'
 
-    - name: Set extra preparations facts
+    - name: Set extra_preparations var
       ansible.builtin.set_fact:
         extra_preparations: "{{ lookup('env', 'extra_prepare_tasks' | default(omit)) }}"
 
