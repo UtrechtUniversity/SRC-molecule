@@ -21,7 +21,6 @@ jobs:
       REQUIREMENTS_FILE: requirements.txt
       PLAYBOOK_DIR: ../../../ # relative to molecule/ext/molecule-src/molecule.yml
     steps:
-      - run: cat /etc/sub*id
       - name: Checkout
         uses: actions/checkout@v6
       - run: git clone https://github.com/UtrechtUniversity/SRC-molecule-test.git molecule
