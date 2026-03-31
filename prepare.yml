@@ -32,10 +32,9 @@
         update_cache: true
       when: ansible_os_family == 'Debian'
 
-    - name: Set test facts
+    - name: Set extra preparations facts
       ansible.builtin.set_fact:
         extra_preparations: "{{ lookup('env', 'extra_prepare_tasks' | default(omit)) }}"
-        workspace_ansible_venv: "{{ lookup('env', 'WORKSPACE_ANSIBLE_VENV' | default('/etc/src/venv/ansible_env')) }}"
 
     - name: Execute optional extra preparations
       ansible.builtin.include_tasks: "{{ extra_preparations }}"
