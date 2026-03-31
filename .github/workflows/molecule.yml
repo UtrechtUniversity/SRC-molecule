@@ -15,7 +15,6 @@ jobs:
       DOCKER_USER: ${{ github.actor }}
       DOCKER_PW: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_REGISTRY: ghcr.io
-      DRIVER_ROOTLESS: false
       ANSIBLE_FORCE_COLOR: '1'
       ANSIBLE_RESULT_FORMAT: yaml
       MOLECULE_CONFIG: molecule/ext/molecule-src/molecule.yml
