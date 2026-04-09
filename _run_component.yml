@@ -31,7 +31,7 @@
         executable: /bin/bash
       environment:
         VIRTUAL_ENV: "{{ lookup('env', 'WORKSPACE_ANSIBLE_VENV') | default('/etc/src/venv/ansible_env', true) }}"
-        ANSIBLE_COLLECTIONS_PATHS: "{{ lookup('env', 'ANSIBLE_COLLECTIONS_PATHS') }}:/rsc/plugins/{{ remote_plugin.script_folder | basename }}"
+        ANSIBLE_COLLECTIONS_PATH: "{{ lookup('env', 'ANSIBLE_COLLECTIONS_PATH') }}:/rsc/plugins/{{ remote_plugin.script_folder | basename }}"
 
     - name: Install collection dependencies for Ansible plugin
       when: requirements_path is defined
@@ -42,7 +42,7 @@
         executable: /bin/bash
       environment:
         VIRTUAL_ENV: "{{ lookup('env', 'WORKSPACE_ANSIBLE_VENV') | default('/etc/src/venv/ansible_env', true) }}"
-        ANSIBLE_COLLECTIONS_PATHS: "{{ lookup('env', 'ANSIBLE_COLLECTIONS_PATHS') }}:/rsc/plugins/{{ remote_plugin.script_folder | basename }}"
+        ANSIBLE_COLLECTIONS_PATH: "{{ lookup('env', 'ANSIBLE_COLLECTIONS_PATH') }}:/rsc/plugins/{{ remote_plugin.script_folder | basename }}"
 
 - name: Test the component by executing it using ansible on the workspace
   ansible.builtin.command: >
@@ -55,4 +55,4 @@
     ansible_on_workspace.stdout_lines[ lookup('ansible.utils.index_of', ansible_on_workspace.stdout_lines, 'regex', '\s*PLAY RECAP\s*', wantlist=True)[0]+1 ]
   environment:
     VIRTUAL_ENV: "{{ lookup('env', 'WORKSPACE_ANSIBLE_VENV') | default('/etc/src/venv/ansible_env', true) }}"
-    ANSIBLE_COLLECTIONS_PATHS: "{{ lookup('env', 'ANSIBLE_COLLECTIONS_PATHS') }}:/rsc/plugins/{{ remote_plugin.script_folder | basename }}"
+    ANSIBLE_COLLECTIONS_PATH: "{{ lookup('env', 'ANSIBLE_COLLECTIONS_PATH') }}:/rsc/plugins/{{ remote_plugin.script_folder | basename }}"
