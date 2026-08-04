@@ -17,10 +17,13 @@ jobs:
       DOCKER_REGISTRY: ghcr.io
       ANSIBLE_FORCE_COLOR: '1'
       ANSIBLE_RESULT_FORMAT: yaml
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MOLECULE_CONFIG: molecule/ext/molecule-src/molecule.yml
       REQUIREMENTS_FILE: requirements.txt
       PLAYBOOK_DIR: ../../../ # relative to molecule/ext/molecule-src/molecule.yml
     steps:
+      - name: Mask secrets
+        run: echo "::add-mask::${GITHUB_TOKEN}"
       - name: Checkout
         uses: actions/checkout@v7
       - run: git clone https://github.com/UtrechtUniversity/SRC-molecule-test.git molecule
