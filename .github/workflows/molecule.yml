@@ -21,7 +21,6 @@ jobs:
       REQUIREMENTS_FILE: requirements.txt
       PLAYBOOK_DIR: ../../../ # relative to molecule/ext/molecule-src/molecule.yml
     steps:
-      - name: Mask secrets
       - name: Checkout
         uses: actions/checkout@v7
       - run: git clone https://github.com/UtrechtUniversity/SRC-molecule-test.git molecule
