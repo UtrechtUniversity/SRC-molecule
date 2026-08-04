@@ -9,8 +9,6 @@
   tasks:
     # here we mimick the SRC-External plugin: https://gitlab.com/rsc-surf-nl/plugins/plugin-external-plugin
     # in the future, we might use the actual SRC-External plugin for testing
-    - name: Fail
-      ansible.builtin.fail: Test
     - name: Run components
       ansible.builtin.include_tasks: _run_component.yml
       vars:
