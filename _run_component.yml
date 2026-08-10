@@ -53,7 +53,7 @@
         ansible_on_workspace.stdout_lines is not defined or
         (ansible_on_workspace.stdout_lines | length < 3) or
         'changed=0' not in
-        ansible_on_workspace.stdout_lines[ lookup('ansible.utils.index_of', ansible_on_workspace.stdout_lines, 'regex', '\s*PLAY RECAP\s*', wantlist=True)[0]+1 ]
+        ansible_on_workspace.stdout_lines[ lookup('ansible.utils.index_of',ansible_on_workspace.stdout_lines, 'regex', '\s*PLAY RECAP\s*', wantlist=True)[0]+1 ]
       environment:
         VIRTUAL_ENV: "{{ lookup('env', 'WORKSPACE_ANSIBLE_VENV') | default('/etc/src/venv/ansible_env', true) }}"
         ANSIBLE_COLLECTION_PATHS: "{{ lookup('env', 'ANSIBLE_COLLECTION_PATHS') }}:{{ remote_plugin.script_folder | basename }}"
