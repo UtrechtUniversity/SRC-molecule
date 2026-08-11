@@ -58,8 +58,14 @@
         VIRTUAL_ENV: "{{ lookup('env', 'WORKSPACE_ANSIBLE_VENV') | default('/etc/src/venv/ansible_env', true) }}"
         ANSIBLE_COLLECTION_PATHS: "{{ lookup('env', 'ANSIBLE_COLLECTION_PATHS') }}:{{ remote_plugin.script_folder | basename }}"
   rescue:
-    - name: Debug component failure
+    - name: Debug component failure (stdout)
+      when: ansible_on_workspace.stdout_lines | length > 0
       ansible.builtin.fail:
         msg: |
-          Running component failed. Ansible returned the following error:
+          Running component failed.
+          
+          Ansible stdout:
           {{ ansible_on_workspace.stdout }}
+
+          Ansible stderr:
+          {{ ansible_on_workspace.stderr }}
