@@ -63,7 +63,7 @@
       ansible.builtin.fail:
         msg: |
           Running component failed.
-          
+ 
           Ansible stdout:
           {{ ansible_on_workspace.stdout }}
 
